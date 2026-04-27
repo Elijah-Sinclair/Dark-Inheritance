@@ -41,9 +41,32 @@ public class Player extends Entity{
         InputHandler input;
     }
 
-    private void shoot(GameState gameState, int targetX, int targetY) {
-        java.util.List<Projectile> shots =
-                projectile
+    private void shoot(GameState gameState, int mouseX, int mouseY) {
+        Camera cam = gameState.getCamera();
+
+        double targetX = mouseX + cam.getScreenX();
+        double targetY = mouseY + cam.getScreenY();
+
+        double dx = targetX - worldX;
+        double dy = targetY - worldY;
+
+        double length = Math.sqrt(dx * dx + dy * dy);
+        dx /= length;
+        dy /= length;
+
+        Projectile p = new Projectile(worldX, worldY, dx * 8, dy * 8, "player");
+
+        gameState.addProjectile(p);
+    }
+
+    @Override
+    public void draw(Graphics g, Camera camera) {
+        int screenX = camera.getScreenX(worldX);
+        int screenY = camera.getScreenY(worldY);
+
+        //Just some default test graphics
+        g.setColor(Color.BLUE);
+        g.fillRect(screenX, screenY, 30, 30);
     }
 
 }
