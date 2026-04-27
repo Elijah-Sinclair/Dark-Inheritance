@@ -5,24 +5,21 @@ import java.awt.image.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GamePanel extends JPanel implements Runnable, KeyListener{
+public class GamePanel extends JPanel implements Runnable{
     private static final int TARGET_FPS = 60;
 
 
+    public GamePanel(int width, int height) {
+        setPreferredSize(new Dimension(width, height));
+        setFocusable(true);
+    }
 
-    @Override
-    public void keyTyped(KeyEvent e) {
+    private void loadAssets() {
 
     }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-
+    private void initWorld(){
+        //
     }
 
     @Override
