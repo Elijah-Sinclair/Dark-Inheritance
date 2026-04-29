@@ -3,21 +3,21 @@ import java.awt.image.BufferedImage;
 
 public class Player extends Entity{
     //Coordinate and movement information
-    private int width, height;
+    private int width = 30, height = 30;
 
-    //Sprite, Frame and technical variables
+    //Animation
     private BufferedImage spriteSheet;
     private int frame = 0;
     private int frameDelay = 0;
 
     //Player Attributes
-    private int maxHealth;
-    private int health;
-    private int movementSpeed;
+    private int maxHealth = 30;
+    private int health = maxHealth;
+    private int movementSpeed = 4;
 
-    private int attackDamage;
-    private int fireRate;
-    private int fireCooldown;
+    private int attackDamage = 1;
+    private int fireRate = 20;
+    private int fireCooldown = 0;
 
 //    private ProjectileBehaviour projectileBehaviour; // This is an additional game feature that may or may not be implemented by the due date
 
@@ -25,27 +25,33 @@ public class Player extends Entity{
         this.worldX = x;
         this.worldY = y;
 
-        this.maxHealth = 30;
-        this.health = maxHealth;
-        this.movementSpeed = 4;
-
-        this.attackDamage = 1;
-        this.fireRate = 20;
-        this.fireCooldown = 0;
-
 //        this.projectileBehaviour = new NormalShot();
     }
 
     @Override
     public void update(GameState gameState) {
-        InputHandler input;
+        InputHandler input = gameState.getInput();
+
+        //Movemente (Espanol accent)
+        if (input.up) worldY -= movementSpeed;
+        if (input.down) worldY += movementSpeed;
+        if (input.left) worldX -= movementSpeed;
+        if (input.right) worldX += movementSpeed;
+
+        //Shooting (Pew Pew)
+        if (fireCooldown > 0) fireCooldown--;
+
+        if (input.shooting && fireCooldown == 0) {
+            shoot(gameState, input.mouseX, input.mouseY);
+            fireCooldown = fireRate;
+        }
     }
 
     private void shoot(GameState gameState, int mouseX, int mouseY) {
         Camera cam = gameState.getCamera();
 
-        double targetX = mouseX + cam.getScreenX();
-        double targetY = mouseY + cam.getScreenY();
+        double targetX = mouseX + cam.getOffsetX();
+        double targetY = mouseY + cam.getOffsetY();
 
         double dx = targetX - worldX;
         double dy = targetY - worldY;
@@ -59,6 +65,10 @@ public class Player extends Entity{
         gameState.addProjectile(p);
     }
 
+    public Rectangle getBounds() {
+        return new Rectangle((int)worldX, (int)worldY, width, height);
+    }
+
     @Override
     public void draw(Graphics g, Camera camera) {
         int screenX = camera.getScreenX(worldX);
@@ -69,4 +79,11 @@ public class Player extends Entity{
         g.fillRect(screenX, screenY, 30, 30);
     }
 
+    public void takeDamage(int dmg) {
+        health -= dmg;
+        if (health <= 0) alive = false;
+    }
+
+    public int getHealth() { return health; }
+    public int getMaxHealth() { return maxHealth; }
 }

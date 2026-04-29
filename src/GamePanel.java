@@ -25,7 +25,7 @@ public class GamePanel extends JPanel implements Runnable{
 
         setFocusable(true);
 
-        gameState = new GameState(input)
+        gameState = new GameState(input);
     }
 
     public void startGameThread() {
@@ -61,12 +61,12 @@ public class GamePanel extends JPanel implements Runnable{
 
         gameState.getPlayer().draw(g, cam);
 
-//      for (Entity e : gameState.getEntities()) {
-//          e.draw()
-//        }
+      for (Entity e : gameState.getEntities()) {
+          e.draw(g, cam);
+        }
 
-//      for (Projectile p : gameState.getProjectiles()) {
-//          e.draw()
-//        }
+      for (Projectile p : gameState.getProjectiles()) {
+          p.draw(g, cam);
+        }
     }
 }

@@ -9,6 +9,7 @@ public class GameState {
 
     private  FXManager fxManager;
     public Camera camera;
+    private InputHandler input;
 
     private int score;
     private int wave;
@@ -44,7 +45,9 @@ public class GameState {
             p.update(this);
         }
 
-        fxManager.update();
+        handleCollisions();
+
+//        fxManager.update();
 
         //Cleanup
         entities.removeIf(e -> !e.isAlive());
@@ -62,7 +65,10 @@ public class GameState {
     }
 
     private void spawnEnemies() {
-        //TBA
+        //TBA Testing Usage
+        for (int i = 0; i < 5; i++) {
+            entities.add(new BasicGrunt(Math.random() * 1000, Math.random() * 1000));
+        }
     }
 
     //Add projectile
@@ -72,6 +78,58 @@ public class GameState {
 
     public void addProjectiles(List<Projectile> list) {
         projectiles.addAll(list);
+    }
+
+    //Collision Handling nightmare
+    private void handleCollisions() {
+
+        //Projectiles
+        for (Projectile p : projectiles) {
+
+            if (!p.isAlive()) continue;
+
+            //Player projectiles → enemies
+            if (p.getOwner().equals("player")) {
+                for (Entity e : entities) {
+                    if (e instanceof Enemy enemy && e.isAlive()) {
+
+                        if (p.getBounds().intersects(enemy.getBounds())) {
+                            enemy.takeDamage(p.getDamage());
+                            p.alive = false;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            //Enemy projectiles → player
+            if (p.getOwner().equals("enemy")) {
+                if (p.getBounds().intersects(player.getBounds())) {
+                    player.takeDamage(p.getDamage());
+                    p.alive = false;
+                }
+            }
+        }
+
+        //Enemy contact damage → player
+        for (Entity e : entities) {
+            if (e instanceof Enemy enemy && e.isAlive()) {
+
+                if (enemy.getBounds().intersects(player.getBounds())) {
+                    player.takeDamage(enemy.getDamage());
+                }
+            }
+        }
+
+        //Hazards → player
+        for (Entity e : entities) {
+            if (e instanceof Hazard hazard && e.isAlive()) {
+
+                if (hazard.getBounds().intersects(player.getBounds())) {
+                    player.takeDamage(hazard.getDamage());
+                }
+            }
+        }
     }
 
     //Getters

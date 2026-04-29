@@ -14,10 +14,14 @@ public class Projectile extends Entity{
         this.worldX = x;
         this.worldY = y;
         this.dx = dx;
-        this.dy =dy;
+        this.dy = dy;
         this.damage = damage;
         this.owner = owner;
         this.lifetime = 120;
+
+        //hitboxing
+        this.width = 8;
+        this.height = 8;
     }
 
     @Override
@@ -33,48 +37,48 @@ public class Projectile extends Entity{
         }
 
         //Collision handling
-        handleCollisions(gameState);
+//        handleCollisions(gameState);
     }
 
-    private void handleCollisions(GameState gameState) {
+//    private void handleCollisions(GameState gameState) {
+//
+//        //Player projectile hits enemy
+//        if (owner.equals("player")) {
+//            for (Entity e : gameState.getEntities()) {
+//                if (e instanceof Enemy enemy && e.isAlive()) {
+//                    if (intersects(enemy)) {
+//                        enemy.takeDamage(damage);
+//                        alive = false;
+//
+//                        //Add FX for Hit here
+//                        break;
+//                    }
+//                }
+//            }
+//        }
+//
+//        //Enemy projectile hits player
+//        if (owner.equals("enemy")) {
+//            Player player = gameState.getPlayer();
+//            if(intersects(player)) {
+//                player.takeDamage(damage);
+//                alive = false;
+//
+//                //add hit FX
+//            }
+//        }
+//    }
 
-        //Player projectile hits enemy
-        if (owner.equals("player")) {
-            for (Entity e : gameState.getEntities()) {
-                if (e instanceof Enemy enemy && e.isAlive()) {
-                    if (intersects(enemy)) {
-                        enemy.takeDamage(damage);
-                        alive = false;
-
-                        //Add FX for Hit here
-                        break;
-                    }
-                }
-            }
-        }
-
-        //Enemy projectile hits player
-        if (owner.equals("enemy")) {
-            Player player = gameState.getPlayer();
-            if(intersects(player)) {
-                player.takeDamage(damage);
-                alive = false;
-
-                //add hit FX
-            }
-        }
-    }
-
-    private boolean intersects(Entity other) {
-        Rectangle r1 = new Rectangle((int)worldX, (int)worldY, SIZE, SIZE);
-        Rectangle r2 = new Rectangle((int)other.worldX, (int)other.worldY, 20, 20);
-        return r1.intersects(r2);
-    }
+//    private boolean intersects(Entity other) {
+//        Rectangle r1 = new Rectangle((int)worldX, (int)worldY, SIZE, SIZE);
+//        Rectangle r2 = new Rectangle((int)other.worldX, (int)other.worldY, 20, 20);
+//        return r1.intersects(r2);
+//    }
 
     @Override
-    public void draw(Graphics g, Camera camera) {
-        int screenX = camera.getScreenX(worldX);
-        int screenY = camera.getScreenY(worldY);
+    public void draw(Graphics g, Camera cam) {
+        int screenX = cam.getScreenX(worldX);
+        int screenY = cam.getScreenY(worldY);
 
         //Note if lag becomes an issue Culling implemented here
         if (screenX < -20 || screenX > 820 || screenY < -20 || screenY > 620) {
@@ -87,11 +91,15 @@ public class Projectile extends Entity{
             g.setColor(Color.RED);
         }
 
-        g.fillOval(screenX, screenY, SIZE, SIZE);
+        g.fillOval(screenX, screenY, width, height);
     }
 
     public int getDamage() {
         return damage;
+    }
+
+    public String getOwner() {
+        return owner;
     }
 
 }
