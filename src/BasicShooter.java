@@ -11,6 +11,8 @@ public class BasicShooter extends Enemy{
         health = 3;
         damage = 1;
         speed = 1;
+
+        scoreValue = 20;
     }
 
     public void update(GameState state) {

@@ -8,6 +8,8 @@ public class BasicGrunt extends Enemy{
         health = 5;
         damage = 1;
         speed = 2;
+
+        scoreValue = 10;
     }
 
     public void update(GameState state) {

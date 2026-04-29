@@ -3,6 +3,8 @@ public class Enemy extends Entity{
     protected int speed;
     protected int damage;
 
+    protected int scoreValue;
+
     public void takeDamage(int dmg) {
         health -= dmg;
         if (health <= 0) {
@@ -12,5 +14,9 @@ public class Enemy extends Entity{
 
     public int getDamage() {
         return damage;
+    }
+
+    public int getScoreValue() {
+        return scoreValue;
     }
 }

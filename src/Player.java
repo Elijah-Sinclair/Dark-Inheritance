@@ -7,15 +7,19 @@ public class Player extends Entity{
 
     //Animation
     private BufferedImage spriteSheet;
+    private BufferedImage[][] animations;
+
+    private int direction = 0; //For if the spritesheet loads wonky
     private int frame = 0;
     private int frameDelay = 0;
 
+
     //Player Attributes
-    private int maxHealth = 3;
+    private int maxHealth = 100;
     private int health = maxHealth;
     private int movementSpeed = 4;
 
-    private int attackDamage = 1;
+    private int attackDamage = 5;
     private int fireRate = 20;
     private int fireCooldown = 0;
 
@@ -26,6 +30,28 @@ public class Player extends Entity{
         this.worldY = y;
 
 //        this.projectileBehaviour = new NormalShot();
+        try {
+            spriteSheet = javax.imageio.ImageIO.read(getClass().getResource("/spritesheets/player.png"));
+
+            int rows = 4;
+            int cols = 4;
+
+            animations = new BufferedImage[rows][cols];
+
+            for (int y = 0; y < rows; y++) {
+                for (int x = 0; x < cols; x++) {
+                    animations[y][x] = spriteSheet.getSubimage(
+                            x * 32,
+                            y * 32,
+                            32,
+                            32
+                    );
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

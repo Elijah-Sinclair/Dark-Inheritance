@@ -10,6 +10,7 @@ public class GamePanel extends JPanel implements Runnable{
 
     private GameState gameState;
     private InputHandler input;
+    private HUD hud;
 
     private static final int TARGET_FPS = 60;
 
@@ -26,6 +27,7 @@ public class GamePanel extends JPanel implements Runnable{
         setFocusable(true);
 
         gameState = new GameState(input);
+        hud = new HUD(gameState);
     }
 
     public void startGameThread() {
@@ -68,5 +70,19 @@ public class GamePanel extends JPanel implements Runnable{
       for (Projectile p : gameState.getProjectiles()) {
           p.draw(g, cam);
         }
+
+//      drawDebugHUD(g);
+      hud.draw(g);
+    }
+
+    private void drawDebugHUD(Graphics g) {
+
+        g.setColor(Color.WHITE);
+
+        // Slightly larger font for readability
+        g.setFont(new Font("Arial", Font.BOLD, 16));
+
+        g.drawString("Score: " + gameState.getScore(), 10, 20);
+        g.drawString("Wave: " + gameState.getWave(), 10, 40);
     }
 }

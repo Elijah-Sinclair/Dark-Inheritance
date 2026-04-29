@@ -11,8 +11,13 @@ public class GameState {
     public Camera camera;
     private InputHandler input;
 
-    private int score;
-    private int wave;
+    private int score = 0;
+    private int wave = 1;
+    private int nextWaveScore = 100; //Adjust till it feels good
+
+    //Spawn Variables
+    private int spawnTimer = 0;
+    private int spawnInterval = 120;
 
     public GameState(InputHandler input) {
         this.input = input;
@@ -24,11 +29,6 @@ public class GameState {
 
         fxManager = new FXManager();
         camera = new Camera();
-
-        score = 0;
-        wave = 1;
-
-        spawnEnemies();
     }
 
     public void update() {
@@ -54,22 +54,72 @@ public class GameState {
         projectiles.removeIf(p -> !p.isAlive());
 
         handleProgression();
+        handleSpawning();
     }
 
     private void handleProgression() {
         //Placeholder logic
-        if (score > 200 * wave) {
+        if (score >= nextWaveScore) {
             wave++;
-            spawnEnemies();
+            nextWaveScore += 100 + (wave * 50);
+            spawnWaveBurst();
+        }
+
+
+
+//        if (score > 200 * wave) {
+//            wave++;
+//        }
+    }
+
+    //Experimental spawn mechanics
+
+    public void spawnWaveBurst() {
+        int count = 1 + wave;
+
+        for (int i = 0; i < count; i++) {
+            spawnEnemy();
         }
     }
 
-    private void spawnEnemies() {
+    private void handleSpawning() {
+        spawnTimer--;
+
+        if (spawnTimer <= 0) {
+            spawnEnemy();
+
+            //Faster spawning as waves increase
+            spawnInterval = Math.max(30, 120 - (wave * 10));
+            spawnTimer = spawnInterval;
+        }
+    }
+
+    private void spawnEnemy() {
         //TBA Testing Usage
+        double x = player.worldX + (Math.random() * 800 - 400);
+        double y = player.worldY + (Math.random() * 800 - 400);
+
+        int roll = (int)(Math.random() * 100);
         for (int i = 0; i < 5; i++) {
             entities.add(new BasicGrunt(Math.random() * 1000, Math.random() * 1000));
         }
+
+        if (wave < 3) {
+            entities.add(new BasicGrunt(x, y));
+        }
+        else if (wave < 6) {
+            if (roll < 70) entities.add(new BasicGrunt(x, y));
+            else entities.add(new BasicShooter(x, y));
+        }
+        else {
+            if (roll < 50) entities.add(new BasicGrunt(x, y));
+            else if (roll < 80) entities.add(new BasicShooter(x, y));
+            else entities.add(new BasicBerserker(x, y));
+        }
+
     }
+
+
 
     //Add projectile
     public void addProjectile(Projectile p) {
@@ -95,7 +145,11 @@ public class GameState {
 
                         if (p.getBounds().intersects(enemy.getBounds())) {
                             enemy.takeDamage(p.getDamage());
-                            p.alive = false;
+                            if (!enemy.isAlive()) {
+                                score += enemy.getScoreValue();
+                            }
+
+                            p.alive = false;//Score calculation may need tuning
                             break;
                         }
                     }
@@ -163,5 +217,9 @@ public class GameState {
 
     public void addScore(int amount) {
         score += amount;
+    }
+
+    public int getWave() {
+        return wave;
     }
 }

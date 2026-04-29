@@ -11,6 +11,8 @@ public class BasicBerserker extends Enemy{
         health = 10;
         damage = 2;
         speed = 4;
+
+        scoreValue = 30;
     }
 
     public void update(GameState state) {
