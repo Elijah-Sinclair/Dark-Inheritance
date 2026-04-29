@@ -33,7 +33,7 @@ public class Player extends Entity{
 
 //        this.projectileBehaviour = new NormalShot();
         try {
-            spriteSheet = javax.imageio.ImageIO.read(getClass().getResource("/player.png"));
+            spriteSheet = javax.imageio.ImageIO.read(getClass().getResource("/playerA.png"));
             System.out.println(getClass().getResource("/player.png"));
 
             int rows = 4;
