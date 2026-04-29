@@ -63,11 +63,11 @@ public class GamePanel extends JPanel implements Runnable{
 
         gameState.getPlayer().draw(g, cam);
 
-      for (Entity e : gameState.getEntities()) {
+        for (Entity e : gameState.getEntities()) {
           e.draw(g, cam);
         }
 
-      for (Projectile p : gameState.getProjectiles()) {
+        for (Projectile p : gameState.getProjectiles()) {
           p.draw(g, cam);
         }
 
