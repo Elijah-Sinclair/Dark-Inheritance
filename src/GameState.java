@@ -15,6 +15,15 @@ public class GameState {
     private int wave = 1;
     private int nextWaveScore = 100; //Adjust till it feels good
 
+    public enum StageType {
+        STAGE1,
+        BOSS
+    }
+    private StageType currentStage = StageType.STAGE1;
+
+    private Boss boss;
+    private boolean bossSpawned = false;
+
     //Spawn Variables
     private int spawnTimer = 0;
     private int spawnInterval = 120;
@@ -65,6 +74,11 @@ public class GameState {
             spawnWaveBurst();
         }
 
+        //Boss Transition
+        if (wave >= 10 && currentStage == StageType.STAGE1) {
+            transitionToBossStage();
+        }
+
 
 
 //        if (score > 200 * wave) {
@@ -83,6 +97,8 @@ public class GameState {
     }
 
     private void handleSpawning() {
+        if (currentStage == StageType.BOSS) return;
+
         spawnTimer--;
 
         if (spawnTimer <= 0) {
@@ -119,7 +135,20 @@ public class GameState {
 
     }
 
+    private void transitionToBossStage() {
+        currentStage = StageType.BOSS;
 
+        entities.clear();
+        projectiles.clear();
+
+        spawnBoss();
+    }
+
+    private void spawnBoss() {
+        boss = new Boss(player.worldX + 200, player.worldY);
+        entities.add(boss);
+        bossSpawned = true;
+    }
 
     //Add projectile
     public void addProjectile(Projectile p) {
@@ -187,39 +216,15 @@ public class GameState {
     }
 
     //Getters
-    public Player getPlayer() {
-        return player;
-    }
-
-    public List<Entity> getEntities() {
-        return entities;
-    }
-
-    public List<Projectile> getProjectiles() {
-        return projectiles;
-    }
-
-    public FXManager getFxManager() {
-        return fxManager;
-    }
-
-    public Camera getCamera() {
-        return camera;
-    }
-
-    public InputHandler getInput() {
-        return input;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void addScore(int amount) {
-        score += amount;
-    }
-
-    public int getWave() {
-        return wave;
-    }
+    public Player getPlayer() { return player; }
+    public List<Entity> getEntities() { return entities; }
+    public List<Projectile> getProjectiles() { return projectiles; }
+    public FXManager getFxManager() { return fxManager; }
+    public Camera getCamera() { return camera; }
+    public InputHandler getInput() { return input; }
+    public int getScore() { return score; }
+    public void addScore(int amount) { score += amount; }
+    public int getWave() { return wave; }
+    public StageType getStage() { return currentStage; }
+    public boolean isBossStage() { return currentStage == StageType.BOSS; }
 }

@@ -12,6 +12,9 @@ public class GamePanel extends JPanel implements Runnable{
     private InputHandler input;
     private HUD hud;
 
+    private BufferedImage stage1BG;
+    private BufferedImage bossBG;
+
     private static final int TARGET_FPS = 60;
 
 
@@ -28,6 +31,13 @@ public class GamePanel extends JPanel implements Runnable{
 
         gameState = new GameState(input);
         hud = new HUD(gameState);
+
+        try {
+            stage1BG = javax.imageio.ImageIO.read(getClass().getResource("/stage1.png"));
+            bossBG = javax.imageio.ImageIO.read(getClass().getResource("/bossStage.png"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void startGameThread() {
@@ -61,6 +71,8 @@ public class GamePanel extends JPanel implements Runnable{
 
         Camera cam = gameState.getCamera();
 
+        drawBackground(g, cam);
+
         gameState.getPlayer().draw(g, cam);
 
         for (Entity e : gameState.getEntities()) {
@@ -71,18 +83,28 @@ public class GamePanel extends JPanel implements Runnable{
           p.draw(g, cam);
         }
 
-//      drawDebugHUD(g);
-      hud.draw(g);
+        hud.draw(g);
     }
 
-    private void drawDebugHUD(Graphics g) {
+    private void drawBackground(Graphics g, Camera cam) {
 
-        g.setColor(Color.WHITE);
+        if (gameState.getStage() == GameState.StageType.STAGE1) {
 
-        // Slightly larger font for readability
-        g.setFont(new Font("Arial", Font.BOLD, 16));
+            int tileW = stage1BG.getWidth();
+            int tileH = stage1BG.getHeight();
 
-        g.drawString("Score: " + gameState.getScore(), 10, 20);
-        g.drawString("Wave: " + gameState.getWave(), 10, 40);
+            int startX = -cam.getOffsetX() % tileW;
+            int startY = -cam.getOffsetY() % tileH;
+
+            for (int x = startX - tileW; x < getWidth(); x += tileW) {
+                for (int y = startY - tileH; y < getHeight(); y += tileH) {
+                    g.drawImage(stage1BG, x, y, null);
+                }
+            }
+
+        } else {
+            // Boss stage (fixed)
+            g.drawImage(bossBG, 0, 0, getWidth(), getHeight(), null);
+        }
     }
 }

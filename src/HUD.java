@@ -54,6 +54,10 @@ public class HUD {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Arial", Font.BOLD, 16));
 
-        g.drawString("Wave: " + gameState.getWave(), 10, 70);
+        if (gameState.isBossStage()) {
+            g.drawString("Wave: BOSS", 10, 70);
+        } else {
+            g.drawString("Wave: " + gameState.getWave(), 10, 70);
+        }
     }
 }
