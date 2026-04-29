@@ -1,7 +1,9 @@
 import java.awt.*;
 
 public class Hazard extends Entity{
+
     private int lifetime = 180;
+    private int damage = 1;
 
     @Override
     public void update(GameState state) {
@@ -20,6 +22,6 @@ public class Hazard extends Entity{
     }
 
     public int getDamage() {
-        return 1;
+        return damage;
     }
 }

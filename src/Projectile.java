@@ -6,7 +6,7 @@ public class Projectile extends Entity{
     private int damage;
     private String owner; // note to self can utilize enum instead 0-0
 
-    private int lifetime; // value means frames of existence
+    private int lifetime = 120; // value means frames of existence
 
     private static final int SIZE = 8; //Projectile size here, future me
 
@@ -17,7 +17,6 @@ public class Projectile extends Entity{
         this.dy = dy;
         this.damage = damage;
         this.owner = owner;
-        this.lifetime = 120;
 
         //hitboxing
         this.width = 8;
