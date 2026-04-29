@@ -4,6 +4,10 @@ public class BasicGrunt extends Enemy{
     public BasicGrunt(double x, double y) {
         worldX = x;
         worldY = y;
+
+        health = 5;
+        damage = 1;
+        speed = 2;
     }
 
     public void update(GameState state) {

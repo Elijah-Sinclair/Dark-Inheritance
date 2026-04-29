@@ -11,7 +11,7 @@ public class Player extends Entity{
     private int frameDelay = 0;
 
     //Player Attributes
-    private int maxHealth = 30;
+    private int maxHealth = 3;
     private int health = maxHealth;
     private int movementSpeed = 4;
 
