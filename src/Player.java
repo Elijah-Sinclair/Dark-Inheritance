@@ -3,7 +3,6 @@ import java.awt.image.BufferedImage;
 
 public class Player extends Entity{
     //Coordinate and movement information
-    private int worldX, worldY;
     private int width, height;
 
     //Sprite, Frame and technical variables
@@ -30,6 +29,7 @@ public class Player extends Entity{
         this.health = maxHealth;
         this.movementSpeed = 4;
 
+        this.attackDamage = 1;
         this.fireRate = 20;
         this.fireCooldown = 0;
 
@@ -54,7 +54,7 @@ public class Player extends Entity{
         dx /= length;
         dy /= length;
 
-        Projectile p = new Projectile(worldX, worldY, dx * 8, dy * 8, "player");
+        Projectile p = new Projectile(worldX, worldY, dx * 8, dy * 8, attackDamage, "player");
 
         gameState.addProjectile(p);
     }

@@ -2,9 +2,9 @@
 public class Camera {
     private int offsetX, offsetY;
 
-    public void centerOn(Entity target, int screenWidth, int screenHeight) {
-        offsetX = (int)target.worldX - screenWidth/2;
-        offsetY = (int)target.worldY - screenHeight/2;
+    public void centerOn(Entity target, int width, int height) {
+        offsetX = (int)target.worldX - width/2;
+        offsetY = (int)target.worldY - height/2;
     }
 
     public int getScreenX(double worldX) {
@@ -13,5 +13,13 @@ public class Camera {
 
     public int getScreenY(double worldY) {
         return (int)(worldY - offsetY);
+    }
+
+    public int getOffsetX() {
+        return offsetX;
+    }
+
+    public int getOffsetY() {
+        return offsetY;
     }
 }
