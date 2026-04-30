@@ -32,34 +32,11 @@ public class Player extends Entity{
         this.worldY = y;
 
 //        this.projectileBehaviour = new NormalShot();
-        try {
-            spriteSheet = javax.imageio.ImageIO.read(getClass().getResource("/playerA.png"));
+        animations = ImageManager.loadSpriteSheet("/playerA.png", 4, 6);
 
-            int rows = 4;
-            int cols = 6;
-
-            int sheetWidth = spriteSheet.getWidth();
-            int sheetHeight = spriteSheet.getHeight();
-
-            int frameWidth = sheetWidth / cols;
-            int frameHeight = sheetHeight / rows;
-
-            animations = new BufferedImage[rows][cols];
-
-            for (int row = 0; row < rows; row++) {
-                for (int col = 0; col < cols; col++) {
-                    animations[row][col] = spriteSheet.getSubimage(
-                            col * frameWidth, //128
-                            row * frameHeight, //256 or the other way around
-                            frameWidth,
-                            frameHeight
-                    );
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        System.out.println("Animations null? " + (animations == null));
+        System.out.println("Row 0 null? " + (animations != null && animations[0] == null));
+        System.out.println("Frame [0][0] null? " + (animations != null && animations[0][0] == null));
     }
 
     @Override

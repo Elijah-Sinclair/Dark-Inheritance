@@ -12,7 +12,9 @@ public class BasicShooter extends Enemy{
         damage = 1;
         speed = 1;
 
-        scoreValue = 20;
+        scoreValue = 30;
+
+        sprite = ImageManager.loadImage("Basic_Shooter.png");
     }
 
     public void update(GameState state) {
@@ -37,7 +39,9 @@ public class BasicShooter extends Enemy{
     }
 
     public void draw(Graphics g, Camera cam) {
-        g.setColor(Color.MAGENTA);
-        g.fillRect(cam.getScreenX(worldX), cam.getScreenY(worldY), width, height);
+//        g.setColor(Color.MAGENTA);
+//        g.fillRect(cam.getScreenX(worldX), cam.getScreenY(worldY), width, height);
+
+        g.drawImage(sprite, cam.getScreenX(worldX), cam.getScreenY(worldY), width, height, null);
     }
 }

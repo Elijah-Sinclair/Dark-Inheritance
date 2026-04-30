@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class BasicGrunt extends Enemy{
     public BasicGrunt(double x, double y) {
@@ -10,6 +11,8 @@ public class BasicGrunt extends Enemy{
         speed = 2;
 
         scoreValue = 10;
+
+        sprite = ImageManager.loadImage("Basic_Grunt.png");
     }
 
     public void update(GameState state) {
@@ -27,10 +30,10 @@ public class BasicGrunt extends Enemy{
     }
 
     public void draw(Graphics g, Camera cam) {
-        int x = cam.getScreenX(worldX);
-        int y = cam.getScreenY(worldY);
 
-        g.setColor(Color.RED);
-        g.fillRect(x, y, 30, 30);
+//        g.setColor(Color.RED);
+//        g.fillRect(x, y, 30, 30);
+
+        g.drawImage(sprite, cam.getScreenX(worldX), cam.getScreenY(worldY), width, height, null);
     }
 }

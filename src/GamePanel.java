@@ -33,8 +33,8 @@ public class GamePanel extends JPanel implements Runnable{
         hud = new HUD(gameState);
 
         try {
-            stage1BG = javax.imageio.ImageIO.read(getClass().getResource("/stage1.png"));
-            bossBG = javax.imageio.ImageIO.read(getClass().getResource("/bossStage.png"));
+            stage1BG = ImageManager.loadImage("/stage1.png");
+            bossBG = ImageManager.loadImage("/bossStage.png");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -56,7 +56,7 @@ public class GamePanel extends JPanel implements Runnable{
     @Override
     public void run() {
         while (true) {
-            gameState.update();
+            gameState.update(getWidth(), getHeight());
             repaint();
 
             try {

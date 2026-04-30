@@ -3,8 +3,8 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class GameWindow extends JFrame{
-    private static final int WIDTH = 800;
-    private static final int HEIGHT = 600;
+    private static final int WIDTH = 1200;
+    private static final int HEIGHT = 900;
 
     public GameWindow() {
         setTitle("Dark Inheritance");

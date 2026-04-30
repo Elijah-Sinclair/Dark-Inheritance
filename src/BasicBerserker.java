@@ -12,7 +12,9 @@ public class BasicBerserker extends Enemy{
         damage = 2;
         speed = 4;
 
-        scoreValue = 30;
+        scoreValue = 50;
+
+        sprite = ImageManager.loadImage("Basic_Berserker.png");
     }
 
     public void update(GameState state) {
@@ -29,7 +31,9 @@ public class BasicBerserker extends Enemy{
     }
 
     public void draw(Graphics g, Camera cam) {
-        g.setColor(Color.ORANGE);
-        g.fillRect(cam.getScreenX(worldX), cam.getScreenY(worldY), width, height);
+//        g.setColor(Color.ORANGE);
+//        g.fillRect(cam.getScreenX(worldX), cam.getScreenY(worldY), width, height);
+
+        g.drawImage(sprite, cam.getScreenX(worldX), cam.getScreenY(worldY), width, height, null);
     }
 }

@@ -1,9 +1,13 @@
+import java.awt.image.BufferedImage;
+
 public class Enemy extends Entity{
     protected int health;
     protected int speed;
     protected int damage;
 
     protected int scoreValue;
+
+    protected BufferedImage sprite;
 
     public void takeDamage(int dmg) {
         health -= dmg;

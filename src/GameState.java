@@ -26,8 +26,8 @@ public class GameState {
     private boolean bossSpawned = false;
 
     //Boss arena var
-    private int arenaWidth = 800;
-    private int arenaHeight = 600;
+    private int arenaWidth = 1000;
+    private int arenaHeight = 900;
 
     //Spawn Variables
     private int spawnTimer = 0;
@@ -45,11 +45,11 @@ public class GameState {
         camera = new Camera();
     }
 
-    public void update() {
+    public void update(int screenWidth, int screenHeight) {
 
         player.update(this);
 
-        camera.centerOn(player, 800, 600);
+        camera.centerOn(player, screenWidth, screenHeight);
 
         for (Entity e : entities) {
             e.update(this);
