@@ -43,6 +43,8 @@ public class GameState {
 
         fxManager = new FXManager();
         camera = new Camera();
+        SoundManager sm = SoundManager.getInstance();
+        sm.playClip("Stage1BGM", true);
     }
 
     public void update(int screenWidth, int screenHeight) {
@@ -143,6 +145,10 @@ public class GameState {
         camera.setBounds(620, 620); // adjust to center properly
 
         spawnBoss();
+        SoundManager sm = SoundManager.getInstance();
+
+        sm.stopClip("Stage1BGM");
+        sm.playClip("StageBossBGM", true);
     }
 
     private void spawnBoss() {

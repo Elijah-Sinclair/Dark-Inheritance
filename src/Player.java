@@ -145,6 +145,7 @@ public class Player extends Entity{
 
     public void takeDamage(int dmg) {
         health -= dmg;
+        SoundManager.getInstance().playClip("Hurt", false);
         if (health <= 0) alive = false;
     }
 
