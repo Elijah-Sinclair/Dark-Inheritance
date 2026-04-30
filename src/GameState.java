@@ -21,8 +21,13 @@ public class GameState {
     }
     private StageType currentStage = StageType.STAGE1;
 
+    //Boss stage and spawning var
     private Boss boss;
     private boolean bossSpawned = false;
+
+    //Boss arena var
+    private int arenaWidth = 800;
+    private int arenaHeight = 600;
 
     //Spawn Variables
     private int spawnTimer = 0;
@@ -78,12 +83,6 @@ public class GameState {
         if (wave >= 10 && currentStage == StageType.STAGE1) {
             transitionToBossStage();
         }
-
-
-
-//        if (score > 200 * wave) {
-//            wave++;
-//        }
     }
 
     //Experimental spawn mechanics
@@ -140,6 +139,8 @@ public class GameState {
 
         entities.clear();
         projectiles.clear();
+
+        camera.setBounds(620, 620); // adjust to center properly
 
         spawnBoss();
     }
@@ -227,4 +228,6 @@ public class GameState {
     public int getWave() { return wave; }
     public StageType getStage() { return currentStage; }
     public boolean isBossStage() { return currentStage == StageType.BOSS; }
+    public int getArenaWidth() { return arenaWidth; }
+    public int getArenaHeight() { return arenaHeight; }
 }

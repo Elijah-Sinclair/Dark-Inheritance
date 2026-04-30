@@ -34,7 +34,6 @@ public class Player extends Entity{
 //        this.projectileBehaviour = new NormalShot();
         try {
             spriteSheet = javax.imageio.ImageIO.read(getClass().getResource("/playerA.png"));
-            System.out.println(getClass().getResource("/player.png"));
 
             int rows = 4;
             int cols = 6;
@@ -102,6 +101,17 @@ public class Player extends Entity{
             }
         } else {
             frame = 0;
+        }
+
+        if (gameState.isBossStage()) {
+
+            int minX = 0;
+            int minY = 0;
+            int maxX = gameState.getArenaWidth() - width;
+            int maxY = gameState.getArenaHeight() - height;
+
+            worldX = Math.max(minX, Math.min(worldX, maxX));
+            worldY = Math.max(minY, Math.min(worldY, maxY));
         }
 
         //Shooting (Pew Pew)

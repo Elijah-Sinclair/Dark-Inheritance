@@ -1,0 +1,11 @@
+Sprites: Me and my brother
+
+SFX
+Victory: badass victory by freesound community; code:85546 from Pixabay.com
+GameOver: game over by ivan luzan; code:160612 from Pixabay.com
+Hurt SFX: jump climb or damage sound f by freesound_community; code:95942 from Pixabay.com
+
+Soundtracks
+Main Stage Soundtrack: Uncertainty (Overkill) //Unused soundrtack that was later released and permited for use with credit
+Boss Stage Soundtrack: RedStone128 - The Final Battle (Released by Infrared Scale on Youtube)
+
