@@ -6,8 +6,8 @@ public class Camera {
     private boolean bounded = false;
 
     public void centerOn(Entity target, int screenWidth, int screenHeight) {
-        offsetX = (int)target.worldX - screenWidth/2;
-        offsetY = (int)target.worldY - screenHeight/2;
+        offsetX = (int)(target.worldX + target.width / 2.0 - screenWidth / 2.0);
+        offsetY = (int)(target.worldY + target.height / 2.0 - screenHeight / 2.0);
 
         if (bounded) {
             offsetX = Math.max(0, Math.min(offsetX, worldWidth - screenWidth));

@@ -25,11 +25,15 @@ public class Player extends Entity{
     private int fireRate = 20;
     private int fireCooldown = 0;
 
+    //adding for Push Orb
+    private double vx = 0;
+    private double vy = 0;
+
 //    private ProjectileBehaviour projectileBehaviour; // This is an additional game feature that may or may not be implemented by the due date
 
     public Player(int x, int y) {
-        this.worldX = x;
-        this.worldY = y;
+        worldX += vx;
+        worldY += vy;
 
 //        this.projectileBehaviour = new NormalShot();
         animations = ImageManager.loadSpriteSheet("/playerA.png", 4, 6);
@@ -41,6 +45,12 @@ public class Player extends Entity{
 
     @Override
     public void update(GameState gameState) {
+        worldX += vx;
+        worldY += vy;
+
+        //friction
+        vx *= 0.85;
+        vy *= 0.85;
         InputHandler input = gameState.getInput();
         boolean moving = false;
 
@@ -98,6 +108,19 @@ public class Player extends Entity{
             shoot(gameState, input.mouseX, input.mouseY);
             fireCooldown = fireRate;
         }
+
+//        //trying to fix bound issues
+//        double halfW = width / 2.0;
+//        double halfH = height / 2.0;
+//
+//        double minX = halfW;
+//        double maxX = gameState.getArenaWidth() - halfW;
+//
+//        double minY = halfH;
+//        double maxY = gameState.getArenaHeight() - halfH;
+//
+//        worldX = Math.max(minX, Math.min(worldX, maxX));
+//        worldY = Math.max(minY, Math.min(worldY, maxY));
     }
 
     private void shoot(GameState gameState, int mouseX, int mouseY) {
@@ -147,6 +170,10 @@ public class Player extends Entity{
         health -= dmg;
         SoundManager.getInstance().playClip("Hurt", false);
         if (health <= 0) alive = false;
+    }
+    public void applyForce(double fx, double fy) {
+        vx += fx;
+        vy += fy;
     }
 
     public int getHealth() { return health; }

@@ -6,7 +6,10 @@ public class Projectile extends Entity{
     private int damage;
     private String owner; // note to self can utilize enum instead 0-0
 
-    private int lifetime = 120; // value means frames of existence
+    private int lifetime = 240; // value means frames of existence
+
+    private int bouncesRemaining = 4; // tweak later
+    private boolean canBounce = false;
 
     private static final int SIZE = 8; //Projectile size here, future me
 
@@ -19,8 +22,8 @@ public class Projectile extends Entity{
         this.owner = owner;
 
         //hitboxing
-        this.width = 8;
-        this.height = 8;
+        this.width = (damage > 0) ? 14 : 20;
+        this.height = (damage > 0) ? 14 : 20;
     }
 
     @Override
@@ -29,60 +32,75 @@ public class Projectile extends Entity{
         worldX += dx;
         worldY += dy;
 
+        // Bounce logic
+        if (canBounce) {
+
+            boolean bounced = false;
+
+            // LEFT
+            if (worldX <= 0) {
+                worldX = 0;
+                dx *= -1;
+                bounced = true;
+            }
+
+            // RIGHT
+            else if (worldX + width >= gameState.getArenaWidth()) {
+                worldX = gameState.getArenaWidth() - width;
+                dx *= -1;
+                bounced = true;
+            }
+
+            // TOP
+            if (worldY <= 0) {
+                worldY = 0;
+                dy *= -1;
+                bounced = true;
+            }
+
+            // BOTTOM
+            else if (worldY + height >= gameState.getArenaHeight()) {
+                worldY = gameState.getArenaHeight() - height;
+                dy *= -1;
+                bounced = true;
+            }
+
+            if (bounced) {
+                // add chaos + speed
+                dx += (Math.random() - 0.5) * 0.3;
+                dy += (Math.random() - 0.5) * 0.3;
+
+                dx *= 1.1;
+                dy *= 1.1;
+
+                bouncesRemaining--;
+            }
+
+            if (bouncesRemaining <= 0) {
+                alive = false;
+            }
+        }
+
+
         //lifetime handling
         lifetime--;
         if (lifetime <= 0) {
             alive = false;
         }
 
-        //Collision handling
-//        handleCollisions(gameState);
+        dx *= 0.999;
+        dy *= 0.999;
+
     }
 
-//    private void handleCollisions(GameState gameState) {
-//
-//        //Player projectile hits enemy
-//        if (owner.equals("player")) {
-//            for (Entity e : gameState.getEntities()) {
-//                if (e instanceof Enemy enemy && e.isAlive()) {
-//                    if (intersects(enemy)) {
-//                        enemy.takeDamage(damage);
-//                        alive = false;
-//
-//                        //Add FX for Hit here
-//                        break;
-//                    }
-//                }
-//            }
-//        }
-//
-//        //Enemy projectile hits player
-//        if (owner.equals("enemy")) {
-//            Player player = gameState.getPlayer();
-//            if(intersects(player)) {
-//                player.takeDamage(damage);
-//                alive = false;
-//
-//                //add hit FX
-//            }
-//        }
-//    }
-
-//    private boolean intersects(Entity other) {
-//        Rectangle r1 = new Rectangle((int)worldX, (int)worldY, SIZE, SIZE);
-//        Rectangle r2 = new Rectangle((int)other.worldX, (int)other.worldY, 20, 20);
-//        return r1.intersects(r2);
-//    }
+    public void setBounce(boolean value) {
+        this.canBounce = value;
+    }
 
     @Override
     public void draw(Graphics g, Camera cam) {
         int screenX = cam.getScreenX(worldX);
         int screenY = cam.getScreenY(worldY);
-
-        //Note if lag becomes an issue Culling implemented here
-        if (screenX < -20 || screenX > 820 || screenY < -20 || screenY > 620) {
-            return;
-        }
 
         if (owner.equals("player")) {
             g.setColor(Color.YELLOW);

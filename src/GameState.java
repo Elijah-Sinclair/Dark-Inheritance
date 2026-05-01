@@ -5,6 +5,7 @@ public class GameState {
 
     private Player player;
     private List<Entity> entities;
+    private List<Entity> pendingEntities = new ArrayList<>();
     private List<Projectile> projectiles;
 
     private  FXManager fxManager;
@@ -26,7 +27,7 @@ public class GameState {
     private boolean bossSpawned = false;
 
     //Boss arena var
-    private int arenaWidth = 1000;
+    private int arenaWidth = 1200;
     private int arenaHeight = 900;
 
     //Spawn Variables
@@ -71,6 +72,17 @@ public class GameState {
 
         handleProgression();
         handleSpawning();
+        entities.addAll(pendingEntities);
+        pendingEntities.clear();
+        if (isBossStage()) {
+            camera.centerOn(boss, screenWidth, screenHeight);
+        } else {
+            camera.centerOn(player, screenWidth, screenHeight);
+        }
+    }
+
+    public void addEntity(Entity e) {
+        pendingEntities.add(e);
     }
 
     private void handleProgression() {
@@ -142,7 +154,9 @@ public class GameState {
         entities.clear();
         projectiles.clear();
 
-        camera.setBounds(620, 620); // adjust to center properly
+        player.worldX = arenaWidth / 2.0;
+        player.worldY = arenaHeight / 2.0;
+        camera.setBounds(arenaWidth, arenaHeight); // adjust to center properly
 
         spawnBoss();
         SoundManager sm = SoundManager.getInstance();
@@ -152,7 +166,7 @@ public class GameState {
     }
 
     private void spawnBoss() {
-        boss = new Boss(player.worldX + 200, player.worldY);
+        boss = new Boss(arenaWidth / 2.0 - 64, arenaHeight / 2.0 - 200, player);
         entities.add(boss);
         bossSpawned = true;
     }
@@ -195,7 +209,20 @@ public class GameState {
             //Enemy projectiles → player
             if (p.getOwner().equals("enemy")) {
                 if (p.getBounds().intersects(player.getBounds())) {
-                    player.takeDamage(p.getDamage());
+                    if (p.getDamage() == 0) {
+                        double dx = player.worldX - p.worldX;
+                        double dy = player.worldY - p.worldY;
+
+                        double len = Math.sqrt(dx * dx + dy * dy);
+                        if (len != 0) {
+                            dx /= len;
+                            dy /= len;
+                        }
+
+                        player.applyForce(dx * 12, dy * 12); // tweak strength
+                    } else {
+                        player.takeDamage(p.getDamage());
+                    }
                     p.alive = false;
                 }
             }

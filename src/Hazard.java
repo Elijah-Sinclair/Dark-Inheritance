@@ -2,8 +2,16 @@ import java.awt.*;
 
 public class Hazard extends Entity{
 
-    private int lifetime = 180;
-    private int damage = 1;
+    private int lifetime = 1800;
+    private int damage = 2;
+
+    public Hazard(double x, double y) {
+        this.worldX = x;
+        this.worldY = y;
+
+        this.width = 60;
+        this.height = 60;
+    }
 
     @Override
     public void update(GameState state) {
