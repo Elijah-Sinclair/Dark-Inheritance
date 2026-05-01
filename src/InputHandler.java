@@ -4,6 +4,7 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
 
     public boolean up, down, left, right;
     public boolean shooting;
+    public boolean restartPressed;
 
     public int mouseX, mouseY;
 
@@ -13,6 +14,7 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
             case KeyEvent.VK_S -> down = true;
             case KeyEvent.VK_A -> left = true;
             case KeyEvent.VK_D -> right = true;
+            case KeyEvent.VK_R -> restartPressed = true;
         }
     }
 
@@ -22,6 +24,7 @@ public class InputHandler implements KeyListener, MouseListener, MouseMotionList
             case KeyEvent.VK_S -> down = false;
             case KeyEvent.VK_A -> left = false;
             case KeyEvent.VK_D -> right = false;
+            case KeyEvent.VK_R -> restartPressed = false;
         }
     }
 

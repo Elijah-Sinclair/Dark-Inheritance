@@ -56,6 +56,12 @@ public class GamePanel extends JPanel implements Runnable{
     @Override
     public void run() {
         while (true) {
+            if (gameState.isGameOver() || gameState.isVictory()) {
+                if (input.restartPressed) {
+                    gameState = new GameState(input);
+                    hud = new HUD(gameState);
+                }
+            }
             gameState.update(getWidth(), getHeight());
             repaint();
 
@@ -73,8 +79,6 @@ public class GamePanel extends JPanel implements Runnable{
 
         drawBackground(g, cam);
 
-        gameState.getPlayer().draw(g, cam);
-
         for (Entity e : gameState.getEntities()) {
           e.draw(g, cam);
         }
@@ -83,7 +87,17 @@ public class GamePanel extends JPanel implements Runnable{
           p.draw(g, cam);
         }
 
+        gameState.getPlayer().draw(g, cam);
+
+        gameState.getFxManager().draw(g, cam);
+
         hud.draw(g);
+
+        if (gameState.isGameOver()) {
+            drawEndScreen(g, "YOU DIED", Color.RED);
+        } else if (gameState.isVictory()) {
+            drawEndScreen(g, "BOSS DEFEATED", Color.GREEN);
+        }
     }
 
     private void drawBackground(Graphics g, Camera cam) {
@@ -106,5 +120,27 @@ public class GamePanel extends JPanel implements Runnable{
             // Boss stage (fixed)
             g.drawImage(bossBG, 0, 0, getWidth(), getHeight(), null);
         }
+    }
+
+    private void drawEndScreen(Graphics g, String text, Color color) {
+        Graphics2D g2 = (Graphics2D) g;
+
+        // Dark overlay
+        g2.setColor(new Color(0, 0, 0, 180));
+        g2.fillRect(0, 0, getWidth(), getHeight());
+
+        // Text
+        g2.setColor(color);
+        g2.setFont(new Font("Arial", Font.BOLD, 48));
+
+        FontMetrics fm = g2.getFontMetrics();
+        int x = (getWidth() - fm.stringWidth(text)) / 2;
+        int y = getHeight() / 2;
+
+        g2.drawString(text, x, y);
+
+        // Subtext
+        g2.setFont(new Font("Arial", Font.PLAIN, 20));
+        g2.drawString("Press R to Restart", x - 40, y + 40);
     }
 }

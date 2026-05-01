@@ -154,6 +154,7 @@ public class Boss extends Enemy{
     //Attacks
     private void spawnPushOrbs(GameState state) {
         int count = (phase == 1) ? 18 : 29;
+        state.getFxManager().triggerShake(20, 5);
 
         for (int i = 0; i < count; i++) {
             Player p = state.getPlayer();
@@ -180,6 +181,18 @@ public class Boss extends Enemy{
                     0,
                     "enemy"
             ));
+            double angle = Math.random() * Math.PI * 2;
+            state.getFxManager().addEffect(
+                    new ParticleEffect(
+                            worldX + (double) width /2,
+                            worldY + (double) height /2,
+                            Math.cos(angle) * 4,
+                            Math.sin(angle) * 4,
+                            3,
+                            25,
+                            Color.CYAN
+                    )
+            );
         }
     }
 
@@ -245,6 +258,7 @@ public class Boss extends Enemy{
             state.addEntity(new Hazard(0, y));
             state.addEntity(new Hazard(w - 20, y));
         }
+        state.getFxManager().triggerShake(25, 7);
     }
 
     private boolean isPlayerClose(GameState state) {

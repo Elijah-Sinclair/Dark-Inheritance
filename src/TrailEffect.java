@@ -2,16 +2,21 @@ import java.awt.*;
 
 public class TrailEffect extends Effect {
 
-    public TrailEffect(double x, double y) {
-        super(x, y, 10);
+    private int size;
+
+    public TrailEffect(double x, double y, int size) {
+        super(x, y, 15);
+        this.size = size;
     }
 
     @Override
     public void draw(Graphics g, Camera cam) {
-        int screenX = cam.getScreenX(x);
-        int screenY = cam.getScreenY(y);
+        int sx = cam.getScreenX(x);
+        int sy = cam.getScreenY(y);
 
-        g.setColor(new Color(255, 50, 50, 120));
-        g.fillOval(screenX, screenY, 8, 8);
+        int alpha = Math.max(0, lifetime * 10);
+
+        g.setColor(new Color(255, 0, 0, alpha));
+        g.fillOval(sx, sy, size, size);
     }
 }

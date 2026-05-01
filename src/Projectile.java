@@ -79,6 +79,9 @@ public class Projectile extends Entity{
             if (bouncesRemaining <= 0) {
                 alive = false;
             }
+            gameState.getFxManager().addEffect(
+                    new TrailEffect(worldX, worldY, width)
+            );
         }
 
 

@@ -10,7 +10,7 @@ public class BasicGrunt extends Enemy{
         damage = 1;
         speed = 2;
 
-        scoreValue = 300;
+        scoreValue = 10;
 
         sprite = ImageManager.loadImage("Basic_Grunt.png");
     }

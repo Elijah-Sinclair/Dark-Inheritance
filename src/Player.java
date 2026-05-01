@@ -17,13 +17,16 @@ public class Player extends Entity{
 
 
     //Player Attributes
-    private int maxHealth = 100;
-    private int health = maxHealth;
+    private int maxHealth = 300;
+    private int health;
     private int movementSpeed = 4;
 
     private int attackDamage = 5;
     private int fireRate = 20;
     private int fireCooldown = 0;
+
+    private int invincibilityTimer = 0;
+    private static final int INVINCIBILITY_DURATION = 30;
 
     //adding for Push Orb
     private double vx = 0;
@@ -32,8 +35,14 @@ public class Player extends Entity{
 //    private ProjectileBehaviour projectileBehaviour; // This is an additional game feature that may or may not be implemented by the due date
 
     public Player(int x, int y) {
-        worldX += vx;
-        worldY += vy;
+        this.worldX = x;
+        this.worldY = y;
+
+        this.health = maxHealth;
+        this.alive = true;
+
+        this.vx = 0;
+        this.vy = 0;
 
 //        this.projectileBehaviour = new NormalShot();
         animations = ImageManager.loadSpriteSheet("/playerA.png", 4, 6);
@@ -45,6 +54,10 @@ public class Player extends Entity{
 
     @Override
     public void update(GameState gameState) {
+        if (invincibilityTimer > 0) {
+            invincibilityTimer--;
+        }
+
         worldX += vx;
         worldY += vy;
 
@@ -142,7 +155,12 @@ public class Player extends Entity{
     }
 
     public Rectangle getBounds() {
-        return new Rectangle((int)worldX, (int)worldY, 32, 32);
+        return new Rectangle(
+                (int) (worldX - width / 2),
+                (int) (worldY - height / 2),
+                width,
+                height
+        );
     }
 
     @Override
@@ -164,9 +182,20 @@ public class Player extends Entity{
         if (img == null) return;
 
         g.drawImage(img, drawX, drawY, width, height, null);
+
+        Graphics2D g2 = (Graphics2D) g;
+
+        if (invincibilityTimer > 0) {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+        }
+
+        g2.drawImage(img, drawX, drawY, width, height, null);
+
+        g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
     }
 
     public void takeDamage(int dmg) {
+        if (invincibilityTimer > 0) return;
         health -= dmg;
         SoundManager.getInstance().playClip("Hurt", false);
         if (health <= 0) alive = false;

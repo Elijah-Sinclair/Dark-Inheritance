@@ -24,9 +24,17 @@ public class Hazard extends Entity{
         int x = cam.getScreenX(worldX);
         int y = cam.getScreenY(worldY);
 
-        //Please fix this future me
+        // Glow
+        g.setColor(new Color(0, 255, 255, 80));
+        g.fillOval(x - 5, y - 5, 30, 30);
+
+        // Core
         g.setColor(Color.CYAN);
-        g.fillRect(x, y, 20, 20);
+        g.fillOval(x, y, 20, 20);
+
+        // Inner pulse
+        g.setColor(Color.WHITE);
+        g.fillOval(x + 6, y + 6, 8, 8);
     }
 
     public int getDamage() {

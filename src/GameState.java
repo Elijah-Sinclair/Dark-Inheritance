@@ -1,5 +1,7 @@
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class GameState {
 
@@ -34,6 +36,9 @@ public class GameState {
     private int spawnTimer = 0;
     private int spawnInterval = 120;
 
+    private boolean gameOver = false;
+    private boolean victory = false;
+
     public GameState(InputHandler input) {
         this.input = input;
 
@@ -50,6 +55,8 @@ public class GameState {
 
     public void update(int screenWidth, int screenHeight) {
 
+        if (gameOver || victory) return;
+
         player.update(this);
 
         camera.centerOn(player, screenWidth, screenHeight);
@@ -64,7 +71,7 @@ public class GameState {
 
         handleCollisions();
 
-//        fxManager.update();
+        fxManager.update();
 
         //Cleanup
         entities.removeIf(e -> !e.isAlive());
@@ -78,6 +85,41 @@ public class GameState {
             camera.centerOn(boss, screenWidth, screenHeight);
         } else {
             camera.centerOn(player, screenWidth, screenHeight);
+        }
+
+        if (!player.isAlive()) {
+            gameOver = true;
+            SoundManager sm = SoundManager.getInstance();
+            sm.stopClip("Stage1BGM");
+            sm.stopClip("StageBossBGM");
+            sm.playClip("Lose", false);
+        }
+
+        if (boss != null && !boss.isAlive()) {
+            fxManager.addEffect(new ExplosionEffect(boss.worldX, boss.worldY));
+
+            // BIG burst
+            for (int i = 0; i < 50; i++) {
+                double angle = Math.random() * Math.PI * 2;
+                double speed = Math.random() * 6;
+
+                fxManager.addEffect(new ParticleEffect(
+                        boss.worldX,
+                        boss.worldY,
+                        Math.cos(angle) * speed,
+                        Math.sin(angle) * speed,
+                        4,
+                        40,
+                        Color.ORANGE
+                ));
+            }
+
+            fxManager.triggerShake(40, 10);
+            victory = true;
+            SoundManager sm = SoundManager.getInstance();
+            sm.stopClip("Stage1BGM");
+            sm.stopClip("StageBossBGM");
+            sm.playClip("Win", false);
         }
     }
 
@@ -196,6 +238,8 @@ public class GameState {
                         if (p.getBounds().intersects(enemy.getBounds())) {
                             enemy.takeDamage(p.getDamage());
                             if (!enemy.isAlive()) {
+                                fxManager.addEffect(new ExplosionEffect(enemy.worldX, enemy.worldY));
+                                fxManager.triggerShake(15, 6);
                                 score += enemy.getScoreValue();
                             }
 
@@ -234,6 +278,9 @@ public class GameState {
 
                 if (enemy.getBounds().intersects(player.getBounds())) {
                     player.takeDamage(enemy.getDamage());
+                    this.getFxManager().addEffect(new HitEffect(player.worldX, player.worldY));
+                    this.getFxManager().triggerShake(10, 4);
+
                 }
             }
         }
@@ -244,6 +291,9 @@ public class GameState {
 
                 if (hazard.getBounds().intersects(player.getBounds())) {
                     player.takeDamage(hazard.getDamage());
+                    this.getFxManager().addEffect(new HitEffect(player.worldX, player.worldY));
+                    this.getFxManager().triggerShake(10, 4);
+
                 }
             }
         }
@@ -263,4 +313,6 @@ public class GameState {
     public boolean isBossStage() { return currentStage == StageType.BOSS; }
     public int getArenaWidth() { return arenaWidth; }
     public int getArenaHeight() { return arenaHeight; }
+    public boolean isGameOver() { return gameOver; }
+    public boolean isVictory() { return victory; }
 }
